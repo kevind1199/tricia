@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Julie</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fce1e4;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        img {
+            width: 320px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #8b3a51;
+            font-size: 2.2rem;
+            margin: 0 0 30px 0;
+            font-weight: 800;
+        }
+
+        .btn-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            height: 60px;
+            width: 100%;
+        }
+
+        button {
+            padding: 12px 35px;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #yesBtn {
+            background-color: #ff5266;
+        }
+
+        #noBtn {
+            background-color: #8c8c8c;
+            position: relative;
+            z-index: 100;
+            transition: all 0.15s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="bunny.png" alt="Cute Bunny Valentine" id="valImg">
+        
+        <h1>Julie, will you be my Valentine?</h1>
+
+        <div class="btn-wrapper">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const padding = 100;
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+
+            const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+
+            if (distance < padding) {
+                noBtn.style.position = 'fixed';
+                const newX = Math.random() * (window.innerWidth - btnRect.width);
+                const newY = Math.random() * (window.innerHeight - btnRect.height);
+                noBtn.style.left = `${newX}px`;
+                noBtn.style.top = `${newY}px`;
+            }
+        });
+
+        function celebrate() {
+            document.body.innerHTML = `
+                <div style="text-align:center; background-color: #fce1e4; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
+                    <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
