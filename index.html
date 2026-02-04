@@ -22,6 +22,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            z-index: 2;
         }
 
         img {
@@ -33,8 +34,15 @@
         h1 {
             color: #8b3a51;
             font-size: 2.2rem;
-            margin: 0 0 30px 0;
+            margin: 0;
             font-weight: 800;
+        }
+
+        .challenge-text {
+            color: #ad6d7d;
+            font-size: 1.1rem;
+            margin: 10px 0 30px 0;
+            font-style: italic;
         }
 
         .btn-wrapper {
@@ -75,13 +83,31 @@
             z-index: 100;
             transition: all 0.1s ease-out; 
         }
+
+        /* Confetti Styles */
+        .heart {
+            position: fixed;
+            font-size: 1.5rem;
+            top: -10%;
+            user-select: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container" id="main-content">
         <img src="bunny.gif" alt="Cute Bunny Valentine">
-        <h1 id="questionText">Julie, will you be my Valentine?</h1>
+        <h1>Julie, will you be my Valentine?</h1>
+        <p class="challenge-text">(I bet you can't hit "No" 😉)</p>
+
         <div class="btn-wrapper">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
             <div id="no-placeholder" class="ghost-no">Not a chance!</div>
@@ -108,36 +134,28 @@
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
             const mouseY = e.clientY;
-            
             const btnRect = noBtn.getBoundingClientRect();
             const btnCenterX = btnRect.left + btnRect.width / 2;
             const btnCenterY = btnRect.top + btnRect.height / 2;
-
             const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
             if (distance < detectionRange) {
                 missCount++;
-
-                // Sassy text updates
                 if (missCount > 15) noBtn.innerText = "Give up! ❤️";
                 else if (missCount > 10) noBtn.innerText = "Not a chance!";
                 else if (missCount > 5) noBtn.innerText = "Try Harder!";
 
-                // Make the Yes button grow slightly to be more tempting
                 yesBtn.style.transform = `scale(${1 + (missCount * 0.05)})`;
 
                 const angle = Math.atan2(mouseY - btnCenterY, mouseX - btnCenterX);
-                
                 let newX = btnCenterX - Math.cos(angle) * 350;
                 let newY = btnCenterY - Math.sin(angle) * 350;
 
                 const padding = 60;
-                const minX = padding;
-                const minY = padding;
                 const maxX = window.innerWidth - btnRect.width - padding;
                 const maxY = window.innerHeight - btnRect.height - padding;
 
-                if (newX <= minX || newX >= maxX || newY <= minY || newY >= maxY) {
+                if (newX <= padding || newX >= maxX || newY <= padding || newY >= maxY) {
                     newX = Math.random() * (window.innerWidth - 200) + 100;
                     newY = Math.random() * (window.innerHeight - 200) + 100;
                 }
@@ -147,10 +165,20 @@
             }
         });
 
-        // The "Secret Function" for when she actually clicks No
         function clickedNo() {
             alert("Error: 'No' button is currently out of service. Please select 'Yes' to continue. ❤️");
-            noBtn.style.display = 'none'; // Button vanishes forever
+            noBtn.style.display = 'none';
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
         }
 
         function celebrate() {
@@ -158,9 +186,10 @@
             content.innerHTML = `
                 <img src="bunny.gif" alt="Happy Bunny">
                 <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
-                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julieboo!</p>
+                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
             `;
             if(noBtn) noBtn.style.display = 'none';
+            setInterval(createHeart, 150); // Start heart confetti!
         }
     </script>
 </body>
