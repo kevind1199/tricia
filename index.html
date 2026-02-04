@@ -55,17 +55,23 @@
             font-weight: bold;
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            white-space: nowrap; /* Prevents text from wrapping when it changes */
         }
 
         #yesBtn {
             background-color: #ff5266;
         }
 
+        .ghost-no {
+            padding: 12px 35px;
+            font-size: 1.4rem;
+            visibility: hidden;
+        }
+
         #noBtn {
             background-color: #8c8c8c;
             position: absolute;
             z-index: 100;
-            /* Fast transition makes it look like it's sliding away at high speed */
             transition: all 0.1s ease-out; 
         }
     </style>
@@ -77,13 +83,24 @@
         <h1>Julie, will you be my Valentine?</h1>
         <div class="btn-wrapper">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
-            <button id="noBtn">No</button>
+            <div id="no-placeholder" class="ghost-no">Try Harder!</div> <button id="noBtn">No</button>
         </div>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
-        const detectionRange = 200; // Large detection zone
+        const placeholder = document.getElementById('no-placeholder');
+        const detectionRange = 200;
+        let missCount = 0;
+
+        function initNoButton() {
+            const rect = placeholder.getBoundingClientRect();
+            noBtn.style.left = rect.left + 'px';
+            noBtn.style.top = rect.top + 'px';
+        }
+
+        window.onload = initNoButton;
+        window.onresize = initNoButton;
 
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
@@ -95,15 +112,23 @@
 
             const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
-            // If the cursor enters the 200px zone, the button "flees"
             if (distance < detectionRange) {
+                missCount++;
+
+                // Change text based on misses
+                if (missCount > 15) {
+                    noBtn.innerText = "Give up! ❤️";
+                } else if (missCount > 10) {
+                    noBtn.innerText = "Not a chance!";
+                } else if (missCount > 5) {
+                    noBtn.innerText = "Try Harder!";
+                }
+
                 const angle = Math.atan2(mouseY - btnCenterY, mouseX - btnCenterX);
                 
-                // Calculate new position in the opposite direction of the mouse
-                let newX = btnCenterX - Math.cos(angle) * 300;
-                let newY = btnCenterY - Math.sin(angle) * 300;
+                let newX = btnCenterX - Math.cos(angle) * 350; // Increased flee distance
+                let newY = btnCenterY - Math.sin(angle) * 350;
 
-                // Keep it within the screen boundaries
                 const padding = 50;
                 newX = Math.max(padding, Math.min(newX, window.innerWidth - btnRect.width - padding));
                 newY = Math.max(padding, Math.min(newY, window.innerHeight - btnRect.height - padding));
@@ -118,7 +143,7 @@
             content.innerHTML = `
                 <img src="bunny.gif" alt="Happy Bunny">
                 <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
-                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julieboo!</p>
+                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
             `;
             noBtn.style.display = 'none';
         }
