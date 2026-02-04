@@ -63,19 +63,18 @@
 
         #noBtn {
             background-color: #8c8c8c;
-            position: relative;
+            position: absolute;
             z-index: 100;
-            transition: all 0.15s ease;
+            /* Fast transition makes it look like it's sliding away at high speed */
+            transition: all 0.1s ease-out; 
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-       <img src="bunny.gif" alt="Cute Bunny Valentine" id="valImg">
-        
+    <div class="container" id="main-content">
+        <img src="bunny.gif" alt="Cute Bunny Valentine">
         <h1>Julie, will you be my Valentine?</h1>
-
         <div class="btn-wrapper">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
             <button id="noBtn">No</button>
@@ -84,7 +83,7 @@
 
     <script>
         const noBtn = document.getElementById('noBtn');
-        const padding = 100;
+        const detectionRange = 200; // Large detection zone
 
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
@@ -96,22 +95,32 @@
 
             const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
 
-            if (distance < padding) {
-                noBtn.style.position = 'fixed';
-                const newX = Math.random() * (window.innerWidth - btnRect.width);
-                const newY = Math.random() * (window.innerHeight - btnRect.height);
+            // If the cursor enters the 200px zone, the button "flees"
+            if (distance < detectionRange) {
+                const angle = Math.atan2(mouseY - btnCenterY, mouseX - btnCenterX);
+                
+                // Calculate new position in the opposite direction of the mouse
+                let newX = btnCenterX - Math.cos(angle) * 300;
+                let newY = btnCenterY - Math.sin(angle) * 300;
+
+                // Keep it within the screen boundaries
+                const padding = 50;
+                newX = Math.max(padding, Math.min(newX, window.innerWidth - btnRect.width - padding));
+                newY = Math.max(padding, Math.min(newY, window.innerHeight - btnRect.height - padding));
+
                 noBtn.style.left = `${newX}px`;
                 noBtn.style.top = `${newY}px`;
             }
         });
 
         function celebrate() {
-            document.body.innerHTML = `
-                <div style="text-align:center; background-color: #fce1e4; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
-                    <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
-                </div>
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <img src="bunny.gif" alt="Happy Bunny">
+                <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
+                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
             `;
+            noBtn.style.display = 'none';
         }
     </script>
 </body>
