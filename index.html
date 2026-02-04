@@ -63,18 +63,17 @@
             font-weight: bold;
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            white-space: nowrap;
         }
 
         #yesBtn {
             background-color: #ff5266;
-            /* Scale transition removed */
         }
 
         .ghost-no {
             padding: 12px 35px;
             font-size: 1.4rem;
             visibility: hidden;
+            white-space: nowrap;
         }
 
         #noBtn {
@@ -82,6 +81,7 @@
             position: absolute;
             z-index: 100;
             transition: all 0.1s ease-out; 
+            white-space: nowrap;
         }
 
         .heart {
@@ -94,9 +94,7 @@
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+            to { transform: translateY(110vh) rotate(360deg); }
         }
     </style>
 </head>
@@ -108,19 +106,98 @@
         <p class="challenge-text">(I bet you can't hit "No" 😉)</p>
 
         <div class="btn-wrapper">
-            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="yesBtn">Yes</button>
             <div id="no-placeholder" class="ghost-no">Not a chance!</div>
-            <button id="noBtn" onclick="clickedNo()">No</button>
+            <button id="noBtn">No</button>
         </div>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
         const placeholder = document.getElementById('no-placeholder');
-        const detectionRange = 180;
+        
         let missCount = 0;
 
-        function initNoButton() {
+        // Ensure button starts in the right place
+        function initPosition() {
             const rect = placeholder.getBoundingClientRect();
             noBtn.style.left = rect.left + 'px';
-            noBtn.
+            noBtn.style.top = rect.top + 'px';
+        }
+
+        // Fleeing logic
+        function moveNo(e) {
+            missCount++;
+            
+            // Sassy text
+            if (missCount > 15) noBtn.innerText = "Give up! ❤️";
+            else if (missCount > 10) noBtn.innerText = "Not a chance!";
+            else if (missCount > 5) noBtn.innerText = "Try Harder!";
+
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+
+            const angle = Math.atan2(mouseY - btnCenterY, mouseX - btnCenterX);
+            let newX = btnCenterX - Math.cos(angle) * 350;
+            let newY = btnCenterY - Math.sin(angle) * 350;
+
+            // Bounds & Teleporting
+            const p = 60;
+            if (newX <= p || newX >= window.innerWidth - btnRect.width - p || 
+                newY <= p || newY >= window.innerHeight - btnRect.height - p) {
+                newX = Math.random() * (window.innerWidth - 200) + 100;
+                newY = Math.random() * (window.innerHeight - 200) + 100;
+            }
+
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        }
+
+        // Heart Confetti
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerText = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        // Success Action
+        function celebrate() {
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <img src="bunny.gif" alt="Happy Bunny">
+                <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
+                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
+            `;
+            noBtn.style.display = 'none';
+            setInterval(createHeart, 150);
+        }
+
+        // Error Action
+        function clickedNo() {
+            alert("Error: 'No' button is currently out of service. Please select 'Yes' to continue. ❤️");
+            noBtn.style.display = 'none';
+        }
+
+        // Assigning Events (Correct way to avoid "broken" buttons)
+        document.addEventListener('mousemove', (e) => {
+            const rect = noBtn.getBoundingClientRect();
+            const dist = Math.hypot(e.clientX - (rect.left + rect.width/2), e.clientY - (rect.top + rect.height/2));
+            if (dist < 180) moveNo(e);
+        });
+
+        yesBtn.addEventListener('click', celebrate);
+        noBtn.addEventListener('click', clickedNo);
+
+        window.onload = initPosition;
+        window.onresize = initPosition;
+    </script>
+</body>
+</html>
