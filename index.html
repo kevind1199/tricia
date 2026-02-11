@@ -143,9 +143,9 @@
                 missCount++;
                 
                 // Sassy Text Changes
-                if (missCount > 15) noBtn.innerText = "Give up! ❤️";
-                else if (missCount > 10) noBtn.innerText = "RAAAAH!";
-                else if (missCount > 5) noBtn.innerText = "Try Harder!";
+                if (missCount > 15) noBtn.innerText = "RAAAAH! ❤️";
+                else if (missCount > 10) noBtn.innerText = "Stop ittt";
+                else if (missCount > 5) noBtn.innerText = "Wrong button";
 
                 // GROWTH REMOVED: yesBtn.style.transform line is gone
 
@@ -188,8 +188,8 @@
             const content = document.getElementById('main-content');
             content.innerHTML = `
                 <img src="bunny.gif" alt="Happy Bunny">
-                <h1 style="font-size:3.5rem; color:#8b3a51;">Yay! ❤️ Best Valentine's Ever!</h1>
-                <p style="font-size:1.5rem; color:#8b3a51;">See you on the 14th, Julie!</p>
+                <h1 style="font-size:3.5rem; color:#8b3a51;">HEEHEEHAAHAA!</h1>
+                <p style="font-size:1.5rem; color:#8b3a51;">I got you now!❤️</p>
             `;
             if(noBtn) noBtn.style.display = 'none';
             setInterval(createHeart, 150);
