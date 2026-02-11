@@ -105,11 +105,11 @@
     <div class="container" id="main-content">
         <img src="bunny.gif" alt="Cute Bunny Valentine">
         <h1>Tricia, will you be my Valentine? :)</h1>
-        <p class="challenge-text">(I bet you can't hit "No" 😉)</p>
+        <p class="challenge-text">(There is only one answer..)</p>
 
         <div class="btn-wrapper">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
-            <div id="no-placeholder" class="ghost-no">Not a chance!</div>
+            <div id="no-placeholder" class="ghost-no">RAAAAH!</div>
             <button id="noBtn" onclick="clickedNo()">No</button>
         </div>
     </div>
@@ -144,7 +144,7 @@
                 
                 // Sassy Text Changes
                 if (missCount > 15) noBtn.innerText = "Give up! ❤️";
-                else if (missCount > 10) noBtn.innerText = "Not a chance!";
+                else if (missCount > 10) noBtn.innerText = "RAAAAH!";
                 else if (missCount > 5) noBtn.innerText = "Try Harder!";
 
                 // GROWTH REMOVED: yesBtn.style.transform line is gone
