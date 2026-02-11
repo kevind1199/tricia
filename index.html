@@ -105,7 +105,7 @@
     <div class="container" id="main-content">
         <img src="picture1.jpg" alt="Cute Bunny Valentine">
         <h1>Tricia, will you be my Valentine? :)</h1>
-        <p class="challenge-text">(There is only one answer..)</p>
+        <p class="challenge-text">(Once you pick, there's no turning back..)</p>
 
         <div class="btn-wrapper">
             <button id="yesBtn" onclick="celebrate()">Yes</button>
@@ -143,9 +143,9 @@
                 missCount++;
                 
                 // Sassy Text Changes
-                if (missCount > 15) noBtn.innerText = "RAAAAH! ❤️";
-                else if (missCount > 10) noBtn.innerText = "Stop ittt";
-                else if (missCount > 5) noBtn.innerText = "Wrong button";
+                if (missCount > 15) noBtn.innerText = "RAAAAAHH!";
+                else if (missCount > 10) noBtn.innerText = "The other one!!";
+                else if (missCount > 5) noBtn.innerText = "Ayo wyd";
 
                 // GROWTH REMOVED: yesBtn.style.transform line is gone
 
@@ -187,7 +187,7 @@
         function celebrate() {
             const content = document.getElementById('main-content');
             content.innerHTML = `
-                <img src="bunny.gif" alt="Happy Bunny">
+                <img src="picture2.jpg" alt="Happy Bunny">
                 <h1 style="font-size:3.5rem; color:#8b3a51;">HEEHEEHAAHAA!</h1>
                 <p style="font-size:1.5rem; color:#8b3a51;">I got you now!❤️</p>
             `;
